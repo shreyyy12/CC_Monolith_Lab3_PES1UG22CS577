@@ -23,10 +23,10 @@ def create_tables(conn):
     ''')
     conn.commit()
 
-
+conn = connect('carts.db')
+cursor = conn.cursor()
 def get_cart(username: str) -> list:
-    conn = connect('carts.db')
-    cursor = conn.cursor()
+    
     if cursor:
         cursor.execute('SELECT * FROM carts WHERE username = ?', (username,))
     else:
@@ -37,18 +37,15 @@ def get_cart(username: str) -> list:
     for row in cart:
         temp_cart.append(row)
     
-    final_cart = []
-    for item in temp_cart:
-        final_cart.append(item)
+    
     
     cursor.close()
     conn.close()
-    return final_cart
+    return temp_cart
 
 
 def add_to_cart(username: str, product_id: int):
-    conn = connect('carts.db')
-    cursor = conn.cursor()
+    
     cursor.execute('SELECT contents FROM carts WHERE username = ?', (username,))
     contents = cursor.fetchone()
     if contents is None:
@@ -62,8 +59,7 @@ def add_to_cart(username: str, product_id: int):
 
 
 def remove_from_cart(username: str, product_id: int):
-    conn = connect('carts.db')
-    cursor = conn.cursor()
+    
     cursor.execute('SELECT contents FROM carts WHERE username = ?', (username,))
     contents = cursor.fetchone()
     if contents is None:
@@ -76,8 +72,7 @@ def remove_from_cart(username: str, product_id: int):
 
 
 def delete_cart(username: str):
-    conn = connect('carts.db')
-    cursor = conn.cursor()
+    
     cursor.execute('DELETE FROM carts WHERE username = ?', (username,))
     conn.commit()
 
